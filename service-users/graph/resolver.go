@@ -4,6 +4,6 @@ package graph
 //
 // It serves as dependency injection for your app, add any dependencies you require here.
 
-//go:generate go run github.com/99designs/gqlgen
+//go:generate gqlgen
 
 type Resolver struct{}
