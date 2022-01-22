@@ -13,19 +13,21 @@ tasks:
       - task: run-gateway
 
   run-gateway:
-    desc: Run gateway
+    desc: Run apollo federation gateway
     cmds:
       - cd gateway && npm install
-      - cd gateway && npm start
+      - cd gateway && npm start 
 
   build-service-users:
     desc: Build service-users
     cmds:
       - cd service-users/ && go mod tidy
       - cd service-users/ && go generate ./...
+      - cd service-users/ && go run main.go &
   
   build-service-task:
     desc: Build service-task
     cmds:
       - cd service-task/ && go mod tidy
       - cd service-task/ && go generate ./...
+      - cd service-task/ && go run main.go &
