@@ -1,0 +1,31 @@
+version: '3'
+ 
+tasks:
+  default:
+    cmds:
+      - task: run
+
+  run:
+    desc: Execute local project
+    cmds:
+      - task: build-service-users
+      - task: build-service-task
+      - task: run-gateway
+
+  run-gateway:
+    desc: Run gateway
+    cmds:
+      - cd gateway && npm install
+      - cd gateway && npm start
+
+  build-service-users:
+    desc: Build service-users
+    cmds:
+      - cd service-users/ && go mod tidy
+      - cd service-users/ && go generate ./...
+  
+  build-service-task:
+    desc: Build service-task
+    cmds:
+      - cd service-task/ && go mod tidy
+      - cd service-task/ && go generate ./...
