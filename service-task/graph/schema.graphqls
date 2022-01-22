@@ -14,7 +14,7 @@ type Task @key(fields: "id") {
 }
 
 extend type User @key(fields: "id") {
-  id: ID! @external
+  id: Int! @external
   tasks: [Task]
 }
 
@@ -24,5 +24,5 @@ type Mutation {
 
 input NewTask {
   task: String!
-  userId: ID!
+  userId: Int!
 }

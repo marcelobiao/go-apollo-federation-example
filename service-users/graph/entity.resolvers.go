@@ -10,7 +10,7 @@ import (
 	"service-users/graph/model"
 )
 
-func (r *entityResolver) FindUserByID(ctx context.Context, id string) (*model.User, error) {
+func (r *entityResolver) FindUserByID(ctx context.Context, id int) (*model.User, error) {
 	for _, item := range userRepository {
 		if item.ID == id {
 			return item, nil

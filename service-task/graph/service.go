@@ -6,6 +6,9 @@ var taskRepository = []*model.Task{
 	{
 		ID:   1,
 		Task: "Create POC",
+		User: &model.User{
+			ID: 1,
+		},
 	},
 }
 
@@ -17,6 +20,9 @@ func CreateTask(input model.NewTask) (*model.Task, error) {
 	user := model.Task{
 		ID:   len(taskRepository) + 1,
 		Task: input.Task,
+		User: &model.User{
+			ID: input.UserID,
+		},
 	}
 	taskRepository = append(taskRepository, &user)
 

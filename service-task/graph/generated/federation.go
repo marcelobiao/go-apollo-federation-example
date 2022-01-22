@@ -108,7 +108,7 @@ func (ec *executionContext) __resolve_entities(ctx context.Context, representati
 			switch resolverName {
 
 			case "findUserByID":
-				id0, err := ec.unmarshalNID2string(ctx, rep["id"])
+				id0, err := ec.unmarshalNInt2int(ctx, rep["id"])
 				if err != nil {
 					return fmt.Errorf(`unmarshalling param 0 for findUserByID(): %w`, err)
 				}

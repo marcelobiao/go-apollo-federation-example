@@ -4,7 +4,7 @@ package model
 
 type NewTask struct {
 	Task   string `json:"task"`
-	UserID string `json:"userId"`
+	UserID int    `json:"userId"`
 }
 
 type Task struct {
@@ -16,7 +16,7 @@ type Task struct {
 func (Task) IsEntity() {}
 
 type User struct {
-	ID    string  `json:"id"`
+	ID    int     `json:"id"`
 	Tasks []*Task `json:"tasks"`
 }
 

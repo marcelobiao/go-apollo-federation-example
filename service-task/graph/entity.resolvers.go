@@ -21,7 +21,7 @@ func (r *entityResolver) FindTaskByID(ctx context.Context, id int) (*model.Task,
 	return &model.Task{}, errors.New("Task not found!")
 }
 
-func (r *entityResolver) FindUserByID(ctx context.Context, id string) (*model.User, error) {
+func (r *entityResolver) FindUserByID(ctx context.Context, id int) (*model.User, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 
