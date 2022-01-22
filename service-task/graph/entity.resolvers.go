@@ -5,13 +5,19 @@ package graph
 
 import (
 	"context"
-	"fmt"
+	"errors"
 	"service-task/graph/generated"
 	"service-task/graph/model"
 )
 
 func (r *entityResolver) FindTaskByID(ctx context.Context, id int) (*model.Task, error) {
-	panic(fmt.Errorf("not implemented"))
+	for _, item := range taskRepository {
+		if item.ID == id {
+			return item, nil
+		}
+	}
+
+	return &model.Task{}, errors.New("Task not found!")
 }
 
 // Entity returns generated.EntityResolver implementation.
