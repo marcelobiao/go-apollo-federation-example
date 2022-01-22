@@ -3,14 +3,21 @@
 package model
 
 type NewTask struct {
-	UserID string `json:"userId"`
 	Task   string `json:"task"`
+	UserID string `json:"userId"`
 }
 
 type Task struct {
-	ID     int    `json:"id"`
-	UserID string `json:"userId"`
-	Task   string `json:"task"`
+	ID   int    `json:"id"`
+	Task string `json:"task"`
+	User *User  `json:"user"`
 }
 
 func (Task) IsEntity() {}
+
+type User struct {
+	ID    string  `json:"id"`
+	Tasks []*Task `json:"tasks"`
+}
+
+func (User) IsEntity() {}

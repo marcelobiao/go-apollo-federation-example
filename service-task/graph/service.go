@@ -15,9 +15,8 @@ func GetTasks() ([]*model.Task, error) {
 
 func CreateTask(input model.NewTask) (*model.Task, error) {
 	user := model.Task{
-		ID:     len(taskRepository) + 1,
-		UserID: input.UserID,
-		Task:   input.Task,
+		ID:   len(taskRepository) + 1,
+		Task: input.Task,
 	}
 	taskRepository = append(taskRepository, &user)
 

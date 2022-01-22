@@ -9,8 +9,13 @@ type Query {
 
 type Task @key(fields: "id") {
   id: Int!
-  userId: ID!
   task: String!
+  user: User
+}
+
+extend type User @key(fields: "id") {
+  id: ID! @external
+  tasks: [Task]
 }
 
 type Mutation {
@@ -18,6 +23,6 @@ type Mutation {
 }
 
 input NewTask {
-  userId: ID!
   task: String!
+  userId: ID!
 }

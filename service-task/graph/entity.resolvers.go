@@ -6,6 +6,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"service-task/graph/generated"
 	"service-task/graph/model"
 )
@@ -18,6 +19,10 @@ func (r *entityResolver) FindTaskByID(ctx context.Context, id int) (*model.Task,
 	}
 
 	return &model.Task{}, errors.New("Task not found!")
+}
+
+func (r *entityResolver) FindUserByID(ctx context.Context, id string) (*model.User, error) {
+	panic(fmt.Errorf("not implemented"))
 }
 
 // Entity returns generated.EntityResolver implementation.
