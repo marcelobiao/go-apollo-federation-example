@@ -1,6 +1,9 @@
 package graph
 
-import "service-task/graph/model"
+import (
+	"errors"
+	"service-task/graph/model"
+)
 
 var taskRepository = []*model.Task{
 	{
@@ -10,6 +13,16 @@ var taskRepository = []*model.Task{
 			ID: 1,
 		},
 	},
+}
+
+func GetTask(id int) (*model.Task, error) {
+	for _, item := range taskRepository {
+		if item.ID == id {
+			return item, nil
+		}
+	}
+
+	return nil, errors.New("Task not found!")
 }
 
 func GetTasks() ([]*model.Task, error) {

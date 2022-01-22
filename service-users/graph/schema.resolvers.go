@@ -5,12 +5,17 @@ package graph
 
 import (
 	"context"
+	"fmt"
 	"service-users/graph/generated"
 	"service-users/graph/model"
 )
 
 func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (*model.User, error) {
 	return CreateUser(input)
+}
+
+func (r *queryResolver) User(ctx context.Context, id int) (*model.User, error) {
+	panic(fmt.Errorf("not implemented"))
 }
 
 func (r *queryResolver) Users(ctx context.Context) ([]*model.User, error) {

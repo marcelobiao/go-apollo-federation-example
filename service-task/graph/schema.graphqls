@@ -4,7 +4,8 @@ schema {
 }
 
 type Query {
-  tasks: [Task!]!
+  task(id: Int!): Task
+  tasks: [Task]
 }
 
 type Task @key(fields: "id") {
@@ -19,7 +20,7 @@ extend type User @key(fields: "id") {
 }
 
 type Mutation {
-  createTask(input: NewTask!): Task!
+  createTask(input: NewTask!): Task
 }
 
 input NewTask {

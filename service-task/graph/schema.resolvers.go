@@ -5,12 +5,18 @@ package graph
 
 import (
 	"context"
+	"fmt"
 	"service-task/graph/generated"
 	"service-task/graph/model"
 )
 
 func (r *mutationResolver) CreateTask(ctx context.Context, input model.NewTask) (*model.Task, error) {
 	return CreateTask(input)
+}
+
+func (r *queryResolver) Task(ctx context.Context, id int) (*model.Task, error) {
+	fmt.Println("AQUI")
+	return GetTask(id)
 }
 
 func (r *queryResolver) Tasks(ctx context.Context) ([]*model.Task, error) {
