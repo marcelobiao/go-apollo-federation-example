@@ -1,16 +1,21 @@
-type User {
-  id: ID!
-  name: String!
+schema {
+  query: Query
+  mutation: Mutation
 }
 
 type Query {
   users: [User!]!
 }
 
-input NewUser {
+type User {
+  id: ID!
   name: String!
 }
 
 type Mutation {
   createUser(input: NewUser!): User!
+}
+
+input NewUser {
+  name: String!
 }
