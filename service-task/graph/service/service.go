@@ -7,8 +7,9 @@ import (
 
 var taskRepository = []*model.Task{
 	{
-		ID:   1,
-		Task: "Create Microservices in GO",
+		ID:       1,
+		Finished: false,
+		Task:     "Create Microservices application in GO",
 		User: &model.User{
 			ID: 1,
 		},
