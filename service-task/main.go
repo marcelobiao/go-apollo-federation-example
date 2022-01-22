@@ -1,7 +1,6 @@
 package main
 
 import (
-	"net/http"
 	"service-task/graph"
 	"service-task/graph/generated"
 
@@ -16,10 +15,6 @@ func main() {
 
 	//e.Use(middleware.Logger())
 	//e.Use(middleware.Recover())
-
-	e.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Welcome!")
-	})
 
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
 	e.POST("/query", func(c echo.Context) error {

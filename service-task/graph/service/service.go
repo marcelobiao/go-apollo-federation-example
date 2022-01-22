@@ -1,4 +1,4 @@
-package graph
+package service
 
 import (
 	"errors"
@@ -27,6 +27,17 @@ func GetTask(id int) (*model.Task, error) {
 
 func GetTasks() ([]*model.Task, error) {
 	return taskRepository, nil
+}
+
+func GetUserTasks(id int) (*model.User, error) {
+	tasks := []*model.Task{}
+	for _, item := range taskRepository {
+		if item.User.ID == id {
+			tasks = append(tasks, item)
+		}
+	}
+
+	return &model.User{Tasks: tasks}, nil
 }
 
 func CreateTask(input model.NewTask) (*model.Task, error) {

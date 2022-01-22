@@ -5,20 +5,25 @@ package graph
 
 import (
 	"context"
+	"fmt"
 	"service-users/graph/generated"
 	"service-users/graph/model"
+	"service-users/graph/service"
 )
 
 func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (*model.User, error) {
-	return CreateUser(input)
+	fmt.Println("mutationResolver-CreateUser")
+	return service.CreateUser(input)
 }
 
 func (r *queryResolver) User(ctx context.Context, id int) (*model.User, error) {
-	return GetUser(id)
+	fmt.Println("queryResolver-User")
+	return service.GetUser(id)
 }
 
 func (r *queryResolver) Users(ctx context.Context) ([]*model.User, error) {
-	return GetUsers()
+	fmt.Println("queryResolver-Users")
+	return service.GetUsers()
 }
 
 // Mutation returns generated.MutationResolver implementation.

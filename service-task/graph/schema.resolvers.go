@@ -8,21 +8,22 @@ import (
 	"fmt"
 	"service-task/graph/generated"
 	"service-task/graph/model"
+	"service-task/graph/service"
 )
 
 func (r *mutationResolver) CreateTask(ctx context.Context, input model.NewTask) (*model.Task, error) {
 	fmt.Println("mutation-CreateTask")
-	return CreateTask(input)
+	return service.CreateTask(input)
 }
 
 func (r *queryResolver) Task(ctx context.Context, id int) (*model.Task, error) {
 	fmt.Println("queryResolver-Task")
-	return GetTask(id)
+	return service.GetTask(id)
 }
 
 func (r *queryResolver) Tasks(ctx context.Context) ([]*model.Task, error) {
 	fmt.Println("queryResolver-Tasks")
-	return GetTasks()
+	return service.GetTasks()
 }
 
 // Mutation returns generated.MutationResolver implementation.

@@ -5,26 +5,20 @@ package graph
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"service-task/graph/generated"
 	"service-task/graph/model"
+	"service-task/graph/service"
 )
 
 func (r *entityResolver) FindTaskByID(ctx context.Context, id int) (*model.Task, error) {
 	fmt.Println("entityResolver-FindTaskByID")
-	for _, item := range taskRepository {
-		if item.ID == id {
-			return item, nil
-		}
-	}
-
-	return &model.Task{}, errors.New("Task not found!")
+	return service.GetTask(id)
 }
 
 func (r *entityResolver) FindUserByID(ctx context.Context, id int) (*model.User, error) {
 	fmt.Println("entityResolver-FindUserByID")
-	return nil, nil
+	return service.GetUserTasks(id)
 }
 
 // Entity returns generated.EntityResolver implementation.
