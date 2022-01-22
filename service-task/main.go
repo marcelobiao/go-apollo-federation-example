@@ -1,11 +1,12 @@
 package main
 
 import (
+	"net/http"
+	"service-task/graph"
+	"service-task/graph/generated"
+
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"net/http"
-	"service-profile/graph"
-	"service-profile/graph/generated"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
