@@ -7,7 +7,7 @@ type Query {
   tasks: [Task!]!
 }
 
-type Task {
+type Task @key(fields: "id") {
   id: Int!
   userId: ID!
   task: String!

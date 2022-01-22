@@ -12,3 +12,5 @@ type Task struct {
 	UserID string `json:"userId"`
 	Task   string `json:"task"`
 }
+
+func (Task) IsEntity() {}
