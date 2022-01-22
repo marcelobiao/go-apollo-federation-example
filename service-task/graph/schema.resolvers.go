@@ -11,15 +11,17 @@ import (
 )
 
 func (r *mutationResolver) CreateTask(ctx context.Context, input model.NewTask) (*model.Task, error) {
+	fmt.Println("mutation-CreateTask")
 	return CreateTask(input)
 }
 
 func (r *queryResolver) Task(ctx context.Context, id int) (*model.Task, error) {
-	fmt.Println("AQUI")
+	fmt.Println("queryResolver-Task")
 	return GetTask(id)
 }
 
 func (r *queryResolver) Tasks(ctx context.Context) ([]*model.Task, error) {
+	fmt.Println("queryResolver-Tasks")
 	return GetTasks()
 }
 

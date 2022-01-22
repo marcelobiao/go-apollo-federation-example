@@ -6,18 +6,20 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"service-users/graph/generated"
 	"service-users/graph/model"
 )
 
 func (r *entityResolver) FindUserByID(ctx context.Context, id int) (*model.User, error) {
+	fmt.Println("FindUserByID")
 	for _, item := range userRepository {
 		if item.ID == id {
 			return item, nil
 		}
 	}
 
-	return &model.User{}, errors.New("Task not found!")
+	return &model.User{}, errors.New("User not found!")
 }
 
 // Entity returns generated.EntityResolver implementation.

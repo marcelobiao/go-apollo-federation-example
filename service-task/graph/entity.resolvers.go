@@ -12,6 +12,7 @@ import (
 )
 
 func (r *entityResolver) FindTaskByID(ctx context.Context, id int) (*model.Task, error) {
+	fmt.Println("entityResolver-FindTaskByID")
 	for _, item := range taskRepository {
 		if item.ID == id {
 			return item, nil
@@ -22,7 +23,8 @@ func (r *entityResolver) FindTaskByID(ctx context.Context, id int) (*model.Task,
 }
 
 func (r *entityResolver) FindUserByID(ctx context.Context, id int) (*model.User, error) {
-	panic(fmt.Errorf("not implemented"))
+	fmt.Println("entityResolver-FindUserByID")
+	return nil, nil
 }
 
 // Entity returns generated.EntityResolver implementation.
