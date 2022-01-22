@@ -2,18 +2,27 @@
 
 package model
 
-type NewTask struct {
-	Task   string `json:"task"`
-	UserID int    `json:"userId"`
+type CreateTaskDto struct {
+	Finished bool   `json:"finished"`
+	Task     string `json:"task"`
+	UserID   int    `json:"userId"`
 }
 
 type Task struct {
-	ID   int    `json:"id"`
-	Task string `json:"task"`
-	User *User  `json:"user"`
+	ID       int    `json:"id"`
+	Finished bool   `json:"finished"`
+	Task     string `json:"task"`
+	User     *User  `json:"user"`
 }
 
 func (Task) IsEntity() {}
+
+type UpdateTaskDto struct {
+	ID       int     `json:"id"`
+	Finished *bool   `json:"finished"`
+	Task     *string `json:"task"`
+	UserID   *int    `json:"userId"`
+}
 
 type User struct {
 	ID    int     `json:"id"`

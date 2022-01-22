@@ -10,6 +10,7 @@ type Query {
 
 type Task @key(fields: "id") {
   id: Int!
+  finished: Boolean!
   task: String!
   user: User
 }
@@ -20,10 +21,19 @@ extend type User @key(fields: "id") {
 }
 
 type Mutation {
-  createTask(input: NewTask!): Task
+  createTask(input: CreateTaskDTO!): Task
+  updateTask(input: UpdateTaskDTO!): Task
 }
 
-input NewTask {
+input CreateTaskDTO {
+  finished: Boolean!
   task: String!
   userId: Int!
+}
+
+input UpdateTaskDTO {
+  id: Int!
+  finished: Boolean
+  task: String
+  userId: Int
 }

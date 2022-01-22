@@ -11,9 +11,14 @@ import (
 	"service-task/graph/service"
 )
 
-func (r *mutationResolver) CreateTask(ctx context.Context, input model.NewTask) (*model.Task, error) {
+func (r *mutationResolver) CreateTask(ctx context.Context, input model.CreateTaskDto) (*model.Task, error) {
 	fmt.Println("mutation-CreateTask")
 	return service.CreateTask(input)
+}
+
+func (r *mutationResolver) UpdateTask(ctx context.Context, input model.UpdateTaskDto) (*model.Task, error) {
+	fmt.Println("mutation-UpdateTask")
+	return service.UpdateTask(input)
 }
 
 func (r *queryResolver) Task(ctx context.Context, id int) (*model.Task, error) {

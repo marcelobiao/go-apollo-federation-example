@@ -52,7 +52,8 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		CreateTask func(childComplexity int, input model.NewTask) int
+		CreateTask func(childComplexity int, input model.CreateTaskDto) int
+		UpdateTask func(childComplexity int, input model.UpdateTaskDto) int
 	}
 
 	Query struct {
@@ -63,9 +64,10 @@ type ComplexityRoot struct {
 	}
 
 	Task struct {
-		ID   func(childComplexity int) int
-		Task func(childComplexity int) int
-		User func(childComplexity int) int
+		Finished func(childComplexity int) int
+		ID       func(childComplexity int) int
+		Task     func(childComplexity int) int
+		User     func(childComplexity int) int
 	}
 
 	User struct {
@@ -83,7 +85,8 @@ type EntityResolver interface {
 	FindUserByID(ctx context.Context, id int) (*model.User, error)
 }
 type MutationResolver interface {
-	CreateTask(ctx context.Context, input model.NewTask) (*model.Task, error)
+	CreateTask(ctx context.Context, input model.CreateTaskDto) (*model.Task, error)
+	UpdateTask(ctx context.Context, input model.UpdateTaskDto) (*model.Task, error)
 }
 type QueryResolver interface {
 	Task(ctx context.Context, id int) (*model.Task, error)
@@ -139,7 +142,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateTask(childComplexity, args["input"].(model.NewTask)), true
+		return e.complexity.Mutation.CreateTask(childComplexity, args["input"].(model.CreateTaskDto)), true
+
+	case "Mutation.updateTask":
+		if e.complexity.Mutation.UpdateTask == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateTask_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateTask(childComplexity, args["input"].(model.UpdateTaskDto)), true
 
 	case "Query.task":
 		if e.complexity.Query.Task == nil {
@@ -178,6 +193,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.__resolve_entities(childComplexity, args["representations"].([]map[string]interface{})), true
+
+	case "Task.finished":
+		if e.complexity.Task.Finished == nil {
+			break
+		}
+
+		return e.complexity.Task.Finished(childComplexity), true
 
 	case "Task.id":
 		if e.complexity.Task.ID == nil {
@@ -297,6 +319,7 @@ type Query {
 
 type Task @key(fields: "id") {
   id: Int!
+  finished: Boolean!
   task: String!
   user: User
 }
@@ -307,12 +330,21 @@ extend type User @key(fields: "id") {
 }
 
 type Mutation {
-  createTask(input: NewTask!): Task
+  createTask(input: CreateTaskDTO!): Task
+  updateTask(input: UpdateTaskDTO!): Task
 }
 
-input NewTask {
+input CreateTaskDTO {
+  finished: Boolean!
   task: String!
   userId: Int!
+}
+
+input UpdateTaskDTO {
+  id: Int!
+  finished: Boolean
+  task: String
+  userId: Int
 }
 `, BuiltIn: false},
 	{Name: "federation/directives.graphql", Input: `
@@ -385,10 +417,25 @@ func (ec *executionContext) field_Entity_findUserByID_args(ctx context.Context, 
 func (ec *executionContext) field_Mutation_createTask_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 model.NewTask
+	var arg0 model.CreateTaskDto
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNNewTask2serviceᚑtaskᚋgraphᚋmodelᚐNewTask(ctx, tmp)
+		arg0, err = ec.unmarshalNCreateTaskDTO2serviceᚑtaskᚋgraphᚋmodelᚐCreateTaskDto(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateTask_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.UpdateTaskDto
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateTaskDTO2serviceᚑtaskᚋgraphᚋmodelᚐUpdateTaskDto(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -589,7 +636,46 @@ func (ec *executionContext) _Mutation_createTask(ctx context.Context, field grap
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateTask(rctx, args["input"].(model.NewTask))
+		return ec.resolvers.Mutation().CreateTask(rctx, args["input"].(model.CreateTaskDto))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.Task)
+	fc.Result = res
+	return ec.marshalOTask2ᚖserviceᚑtaskᚋgraphᚋmodelᚐTask(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_updateTask(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updateTask_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateTask(rctx, args["input"].(model.UpdateTaskDto))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -855,6 +941,41 @@ func (ec *executionContext) _Task_id(ctx context.Context, field graphql.Collecte
 	res := resTmp.(int)
 	fc.Result = res
 	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Task_finished(ctx context.Context, field graphql.CollectedField, obj *model.Task) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Task",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Finished, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Task_task(ctx context.Context, field graphql.CollectedField, obj *model.Task) (ret graphql.Marshaler) {
@@ -2145,8 +2266,8 @@ func (ec *executionContext) ___Type_ofType(ctx context.Context, field graphql.Co
 
 // region    **************************** input.gotpl *****************************
 
-func (ec *executionContext) unmarshalInputNewTask(ctx context.Context, obj interface{}) (model.NewTask, error) {
-	var it model.NewTask
+func (ec *executionContext) unmarshalInputCreateTaskDTO(ctx context.Context, obj interface{}) (model.CreateTaskDto, error) {
+	var it model.CreateTaskDto
 	asMap := map[string]interface{}{}
 	for k, v := range obj.(map[string]interface{}) {
 		asMap[k] = v
@@ -2154,6 +2275,14 @@ func (ec *executionContext) unmarshalInputNewTask(ctx context.Context, obj inter
 
 	for k, v := range asMap {
 		switch k {
+		case "finished":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("finished"))
+			it.Finished, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		case "task":
 			var err error
 
@@ -2167,6 +2296,53 @@ func (ec *executionContext) unmarshalInputNewTask(ctx context.Context, obj inter
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("userId"))
 			it.UserID, err = ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdateTaskDTO(ctx context.Context, obj interface{}) (model.UpdateTaskDto, error) {
+	var it model.UpdateTaskDto
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "finished":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("finished"))
+			it.Finished, err = ec.unmarshalOBoolean2ᚖbool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "task":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("task"))
+			it.Task, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "userId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("userId"))
+			it.UserID, err = ec.unmarshalOInt2ᚖint(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -2305,6 +2481,13 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "createTask":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createTask(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+		case "updateTask":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateTask(ctx, field)
 			}
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
@@ -2463,6 +2646,16 @@ func (ec *executionContext) _Task(ctx context.Context, sel ast.SelectionSet, obj
 		case "id":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Task_id(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "finished":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Task_finished(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -2988,6 +3181,11 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
+func (ec *executionContext) unmarshalNCreateTaskDTO2serviceᚑtaskᚋgraphᚋmodelᚐCreateTaskDto(ctx context.Context, v interface{}) (model.CreateTaskDto, error) {
+	res, err := ec.unmarshalInputCreateTaskDTO(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNInt2int(ctx context.Context, v interface{}) (int, error) {
 	res, err := graphql.UnmarshalInt(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -3001,11 +3199,6 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 		}
 	}
 	return res
-}
-
-func (ec *executionContext) unmarshalNNewTask2serviceᚑtaskᚋgraphᚋmodelᚐNewTask(ctx context.Context, v interface{}) (model.NewTask, error) {
-	res, err := ec.unmarshalInputNewTask(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v interface{}) (string, error) {
@@ -3035,6 +3228,11 @@ func (ec *executionContext) marshalNTask2ᚖserviceᚑtaskᚋgraphᚋmodelᚐTas
 		return graphql.Null
 	}
 	return ec._Task(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNUpdateTaskDTO2serviceᚑtaskᚋgraphᚋmodelᚐUpdateTaskDto(ctx context.Context, v interface{}) (model.UpdateTaskDto, error) {
+	res, err := ec.unmarshalInputUpdateTaskDTO(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNUser2serviceᚑtaskᚋgraphᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v model.User) graphql.Marshaler {
@@ -3437,6 +3635,22 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 		return graphql.Null
 	}
 	res := graphql.MarshalBoolean(*v)
+	return res
+}
+
+func (ec *executionContext) unmarshalOInt2ᚖint(ctx context.Context, v interface{}) (*int, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := graphql.UnmarshalInt(v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.SelectionSet, v *int) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	res := graphql.MarshalInt(*v)
 	return res
 }
 

@@ -8,7 +8,7 @@ import (
 var taskRepository = []*model.Task{
 	{
 		ID:   1,
-		Task: "Create POC",
+		Task: "Create Microservices in GO",
 		User: &model.User{
 			ID: 1,
 		},
@@ -40,10 +40,11 @@ func GetUserTasks(id int) (*model.User, error) {
 	return &model.User{Tasks: tasks}, nil
 }
 
-func CreateTask(input model.NewTask) (*model.Task, error) {
+func CreateTask(input model.CreateTaskDto) (*model.Task, error) {
 	user := model.Task{
-		ID:   len(taskRepository) + 1,
-		Task: input.Task,
+		ID:       len(taskRepository) + 1,
+		Finished: input.Finished,
+		Task:     input.Task,
 		User: &model.User{
 			ID: input.UserID,
 		},
@@ -51,4 +52,25 @@ func CreateTask(input model.NewTask) (*model.Task, error) {
 	taskRepository = append(taskRepository, &user)
 
 	return &user, nil
+}
+
+func UpdateTask(input model.UpdateTaskDto) (*model.Task, error) {
+	task, err := GetTask(input.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	if input.Finished != nil {
+		task.Finished = *input.Finished
+	}
+
+	if input.Task != nil {
+		task.Task = *input.Task
+	}
+
+	if input.UserID != nil {
+		task.User.ID = *input.UserID
+	}
+
+	return task, nil
 }
