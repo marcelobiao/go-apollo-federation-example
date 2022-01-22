@@ -1,1 +1,1 @@
-# go-gqlgen
+# go-apollo-federation-example
